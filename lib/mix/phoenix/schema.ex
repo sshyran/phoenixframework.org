@@ -36,7 +36,8 @@ defmodule Mix.Phoenix.Schema do
             migration_module: nil,
             fixture_unique_functions: %{},
             fixture_params: %{},
-            prefix: nil
+            prefix: nil,
+            login_path: nil
 
   @valid_types [
     :integer,
@@ -138,7 +139,8 @@ defmodule Mix.Phoenix.Schema do
       migration_module: migration_module(),
       fixture_unique_functions: fixture_unique_functions,
       fixture_params: fixture_params(attrs, fixture_unique_functions),
-      prefix: opts[:prefix]
+      prefix: opts[:prefix],
+      login_path: login_path(opts)
     }
   end
 
@@ -536,5 +538,12 @@ defmodule Mix.Phoenix.Schema do
           {attr, inspect(type_to_default(attr, type, :create))}
       end
     end)
+  end
+
+  defp login_path(opts) do
+    case Keyword.fetch(opts, :live) do
+      {:ok, true} -> "_login_path"
+      _ -> "_session_path"
+    end
   end
 end
